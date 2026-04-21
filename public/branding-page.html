@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UPI SmartPay for WooCommerce — by iampmpksamy</title>
+  <meta name="description" content="Smart UPI QR payment gateway for WooCommerce. Accept UPI payments without per-transaction fees. Built by Maalig (iampmpksamy)." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #1a73e8;
+      --blue-dk: #1558b0;
+      --green:   #1e8a3c;
+      --text:    #212121;
+      --muted:   #6b7280;
+      --border:  #e0e0e0;
+      --surface: #f8f9fa;
+      --radius:  12px;
+      --font:    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      color:       var(--text);
+      background:  #fff;
+      line-height: 1.6;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Navigation ───────────────────────────────────────── */
+    nav {
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      padding:         16px 40px;
+      border-bottom:   1px solid var(--border);
+      position:        sticky;
+      top:             0;
+      background:      rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      z-index:         100;
+    }
+
+    .nav-brand {
+      display:     flex;
+      align-items: center;
+      gap:         10px;
+      font-weight: 700;
+      font-size:   1rem;
+      color:       var(--text);
+    }
+
+    .nav-brand .badge {
+      background:  var(--blue);
+      color:       #fff;
+      font-size:   0.65rem;
+      padding:     2px 7px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links { display: flex; gap: 24px; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--blue); text-decoration: none; }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      text-align:  center;
+      padding:     80px 24px 60px;
+      max-width:   760px;
+      margin:      0 auto;
+    }
+
+    .hero-eyebrow {
+      display:        inline-flex;
+      align-items:    center;
+      gap:            6px;
+      background:     #e8f0fe;
+      color:          var(--blue);
+      font-size:      0.8125rem;
+      font-weight:    600;
+      padding:        5px 14px;
+      border-radius:  20px;
+      margin-bottom:  20px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero h1 {
+      font-size:   clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color:       var(--text);
+    }
+
+    .hero h1 span { color: var(--blue); }
+
+    .hero p {
+      font-size:    1.1rem;
+      color:        var(--muted);
+      margin-bottom: 36px;
+      max-width:    560px;
+      margin-left:  auto;
+      margin-right: auto;
+    }
+
+    .hero-actions {
+      display:   flex;
+      gap:       14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display:         inline-flex;
+      align-items:     center;
+      gap:             8px;
+      padding:         14px 28px;
+      font-size:       0.9375rem;
+      font-weight:     700;
+      border-radius:   var(--radius);
+      cursor:          pointer;
+      transition:      all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color:      #fff;
+      box-shadow: 0 4px 16px rgba(26,115,232,0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dk);
+      transform:  translateY(-1px);
+      box-shadow: 0 6px 24px rgba(26,115,232,0.45);
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .btn-outline {
+      border:  2px solid var(--border);
+      color:   var(--text);
+      background: #fff;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--blue);
+      color:        var(--blue);
+      text-decoration: none;
+    }
+
+    /* ── Screenshot strip ─────────────────────────────────── */
+    .screenshots {
+      background: var(--surface);
+      padding:    48px 24px;
+      text-align: center;
+    }
+
+    .screenshots h2 {
+      font-size:     1.5rem;
+      font-weight:   800;
+      margin-bottom: 8px;
+    }
+
+    .screenshots p {
+      color:         var(--muted);
+      font-size:     0.9rem;
+      margin-bottom: 36px;
+    }
+
+    .screenshot-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:                   20px;
+      max-width:             1000px;
+      margin:                0 auto;
+    }
+
+    .screenshot-card {
+      background:    #fff;
+      border:        1px solid var(--border);
+      border-radius: var(--radius);
+      overflow:      hidden;
+      box-shadow:    0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .screenshot-placeholder {
+      height:          180px;
+      background:      linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      font-size:       2.5rem;
+    }
+
+    .screenshot-card p {
+      padding:   12px 16px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color:     var(--text);
+      text-align: left;
+      margin:    0;
+    }
+
+    /* ── Features grid ────────────────────────────────────── */
+    .features {
+      padding:   64px 24px;
+      max-width: 1080px;
+      margin:    0 auto;
+    }
+
+    .section-title {
+      text-align:    center;
+      font-size:     1.75rem;
+      font-weight:   800;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      text-align:    center;
+      color:         var(--muted);
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:                   24px;
+    }
+
+    .feature-card {
+      background:    #fff;
+      border:        1px solid var(--border);
+      border-radius: var(--radius);
+      padding:       24px;
+      transition:    box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 6px 24px rgba(26,115,232,0.12);
+      transform:  translateY(-2px);
+    }
+
+    .feature-icon {
+      font-size:     1.75rem;
+      margin-bottom: 12px;
+      display:       block;
+    }
+
+    .feature-card h3 {
+      font-size:     1rem;
+      font-weight:   700;
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color:     var(--muted);
+    }
+
+    /* ── How it works ─────────────────────────────────────── */
+    .how-it-works {
+      background: var(--surface);
+      padding:    64px 24px;
+    }
+
+    .steps {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:                   24px;
+      max-width:             900px;
+      margin:                0 auto;
+      text-align:            center;
+    }
+
+    .step-number {
+      display:         inline-flex;
+      align-items:     center;
+      justify-content: center;
+      width:           44px;
+      height:          44px;
+      background:      var(--blue);
+      color:           #fff;
+      border-radius:   50%;
+      font-size:       1.1rem;
+      font-weight:     800;
+      margin:          0 auto 12px;
+    }
+
+    .step h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 6px; }
+    .step p  { font-size: 0.8125rem; color: var(--muted); }
+
+    /* ── Developer section ────────────────────────────────── */
+    .developer {
+      padding:    64px 24px;
+      max-width:  700px;
+      margin:     0 auto;
+      text-align: center;
+    }
+
+    .dev-avatar {
+      width:         80px;
+      height:        80px;
+      background:    linear-gradient(135deg, #1a73e8, #1558b0);
+      border-radius: 50%;
+      display:       flex;
+      align-items:   center;
+      justify-content: center;
+      font-size:     2rem;
+      margin:        0 auto 20px;
+    }
+
+    .developer h2 {
+      font-size:     1.5rem;
+      font-weight:   800;
+      margin-bottom: 8px;
+    }
+
+    .developer p {
+      color:         var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .dev-links {
+      display:   flex;
+      gap:       12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .dev-link {
+      display:         inline-flex;
+      align-items:     center;
+      gap:             6px;
+      padding:         8px 18px;
+      border:          1.5px solid var(--border);
+      border-radius:   20px;
+      font-size:       0.875rem;
+      font-weight:     600;
+      color:           var(--text);
+      transition:      all 0.2s ease;
+    }
+
+    .dev-link:hover {
+      border-color:    var(--blue);
+      color:           var(--blue);
+      text-decoration: none;
+    }
+
+    /* ── CTA banner ───────────────────────────────────────── */
+    .cta-banner {
+      background:  linear-gradient(135deg, #1a73e8 0%, #1558b0 100%);
+      color:       #fff;
+      padding:     60px 24px;
+      text-align:  center;
+    }
+
+    .cta-banner h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 12px; }
+    .cta-banner p  { font-size: 1rem; opacity: 0.85; margin-bottom: 32px; }
+
+    .cta-banner .btn-primary {
+      background: #fff;
+      color:      var(--blue);
+    }
+
+    .cta-banner .btn-outline {
+      border-color: rgba(255,255,255,0.5);
+      color:        #fff;
+    }
+
+    .cta-banner .btn-outline:hover {
+      background: rgba(255,255,255,0.15);
+      color:      #fff;
+      border-color: rgba(255,255,255,0.8);
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding:    24px;
+      text-align: center;
+      font-size:  0.8125rem;
+      color:      var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 56px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-brand">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+           fill="none" stroke="#1a73e8" stroke-width="2" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <path d="M14 14h2v2h-2zm4 0h3v3h-3zm-4 4h3v3h-3zm4 2h3"/>
+      </svg>
+      UPI SmartPay
+      <span class="badge">WooCommerce</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it Works</a>
+      <a href="#developer">Developer</a>
+      <a href="https://www.pmpksamy.com" target="_blank" rel="noopener">Website</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      🇮🇳 Made for Indian WooCommerce Merchants
+    </div>
+    <h1>
+      Accept UPI Payments<br/>
+      <span>Without Platform Fees</span>
+    </h1>
+    <p>
+      UPI SmartPay adds a complete UPI QR payment flow to your WooCommerce store.
+      No third-party API. No per-transaction fees. Full control over your payments.
+    </p>
+    <div class="hero-actions">
+      <a href="https://wordpress.org/plugins/upi-smartpay" target="_blank" rel="noopener" class="btn btn-primary">
+        ⬇ Download Free Plugin
+      </a>
+      <a href="https://www.pmpksamy.com/plugins/upi-smartpay" target="_blank" rel="noopener" class="btn btn-outline">
+        📖 View Documentation
+      </a>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="screenshots" id="screenshots">
+    <h2>See it in Action</h2>
+    <p>Clean UX on every screen — from checkout to admin approval.</p>
+    <div class="screenshot-grid">
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">🛒</div>
+        <p>Checkout — UPI payment option</p>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">📱</div>
+        <p>Thank-You page — QR code + UPI ID</p>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">✅</div>
+        <p>Admin — Approve / Reject panel</p>
+      </div>
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">⚙️</div>
+        <p>Gateway settings page</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <h2 class="section-title">Everything You Need</h2>
+    <p class="section-sub">A production-ready UPI gateway built for real stores.</p>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <span class="feature-icon">📷</span>
+        <h3>Auto QR Code Generation</h3>
+        <p>Per-order QR code with pre-filled amount and order reference. No manual steps.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔀</span>
+        <h3>Multiple UPI IDs</h3>
+        <p>Configure multiple UPI VPAs. Rotate randomly or use priority order.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">📋</span>
+        <h3>Copy UPI ID Button</h3>
+        <p>One-tap copy with visual feedback. Works on all browsers including mobile.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">📲</span>
+        <h3>Mobile Deep-Link</h3>
+        <p>Tap "Open UPI App" on mobile to open any installed UPI app directly.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">📸</span>
+        <h3>Screenshot Upload</h3>
+        <p>Optional drag-and-drop screenshot upload. Files stored privately, served securely.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔢</span>
+        <h3>UTR Capture</h3>
+        <p>Customers enter their UTR / transaction reference for faster admin verification.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔔</span>
+        <h3>Admin Notifications</h3>
+        <p>Instant email when a customer confirms payment. Approve or reject with one click.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔄</span>
+        <h3>Live Status Polling</h3>
+        <p>Order page auto-refreshes every 15 seconds. Customer knows when payment is approved.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔒</span>
+        <h3>Security First</h3>
+        <p>Nonce verification, capability checks, private file storage, MIME type validation.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🗄️</span>
+        <h3>HPOS Compatible</h3>
+        <p>Fully compatible with WooCommerce High-Performance Order Storage.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🌐</span>
+        <h3>Translation Ready</h3>
+        <p>Full i18n support with .pot file included. Localise to any language.</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🐛</span>
+        <h3>Debug Logging</h3>
+        <p>Integrated with WooCommerce status logs. Enable/disable per environment.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how-it-works" id="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">A simple 5-step payment flow your customers will love.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Customer Checks Out</h3>
+        <p>Selects "Pay via UPI" at checkout and places the order.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>QR Code Displayed</h3>
+        <p>Thank-you page shows a QR code, UPI ID, and instructions.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Customer Pays</h3>
+        <p>Scans QR in any UPI app and completes the transfer.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Confirms Payment</h3>
+        <p>Enters UTR number, optionally uploads screenshot, clicks "I Have Paid".</p>
+      </div>
+      <div class="step">
+        <div class="step-number">5</div>
+        <h3>Admin Approves</h3>
+        <p>Verifies UTR in UPI app, clicks Approve. Order moves to Processing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Developer -->
+  <section class="developer" id="developer">
+    <div class="dev-avatar">👨‍💻</div>
+    <h2>Developed by Maalig (iampmpksamy)</h2>
+    <p>
+      WordPress plugin architect and WooCommerce specialist. Building tools that
+      help Indian merchants sell smarter — without unnecessary third-party dependencies.
+    </p>
+    <div class="dev-links">
+      <a href="https://www.pmpksamy.com" target="_blank" rel="noopener" class="dev-link">
+        🌐 pmpksamy.com
+      </a>
+      <a href="https://www.iampmpksamy.social" target="_blank" rel="noopener" class="dev-link">
+        📱 iampmpksamy.social
+      </a>
+      <a href="https://github.com/iampmpksamy" target="_blank" rel="noopener" class="dev-link">
+        💻 GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <h2>Ready to Accept UPI Payments?</h2>
+    <p>Free. Open source. GPL-licensed. Install in under 2 minutes.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://wordpress.org/plugins/upi-smartpay" target="_blank" rel="noopener" class="btn btn-primary">
+        ⬇ Download Plugin
+      </a>
+      <a href="https://www.pmpksamy.com/plugins/upi-smartpay" target="_blank" rel="noopener" class="btn btn-outline">
+        📖 Documentation
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      <strong>UPI SmartPay for WooCommerce</strong> — GPL-2.0-or-later &nbsp;·&nbsp;
+      Developed by <a href="https://www.pmpksamy.com" target="_blank" rel="noopener">Maalig (iampmpksamy)</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.iampmpksamy.social" target="_blank" rel="noopener">🌐 Social Hub</a>
+    </p>
+  </footer>
+
+</body>
+</html>

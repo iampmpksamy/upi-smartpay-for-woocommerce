@@ -1,0 +1,279 @@
+/**
+ * UPI SmartPay for WooCommerce — Admin Styles
+ * Developed by Maalig (iampmpksamy) · https://www.pmpksamy.com
+ *
+ * @package PMPKSAMY_UPI_SmartPay
+ */
+
+/* ============================================================
+   Gateway settings page — branded header
+   ============================================================ */
+.pmpksamy-settings-header {
+	display:         flex;
+	align-items:     center;
+	justify-content: space-between;
+	flex-wrap:       wrap;
+	gap:             12px;
+	background:      linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+	border:          1px solid #c7d9f7;
+	border-radius:   8px;
+	padding:         16px 20px;
+	margin-bottom:   20px;
+}
+
+.pmpksamy-header-identity {
+	display:     flex;
+	align-items: center;
+	gap:         14px;
+}
+
+.pmpksamy-header-identity img {
+	flex-shrink: 0;
+}
+
+.pmpksamy-header-identity h2 {
+	font-size:   1.2rem;
+	font-weight: 800;
+	color:       #1a73e8;
+	margin:      0 0 2px;
+}
+
+.pmpksamy-header-identity p {
+	font-size: 0.8125rem;
+	color:     #555;
+	margin:    0;
+}
+
+.pmpksamy-header-links {
+	display:  flex;
+	gap:      12px;
+	flex-wrap: wrap;
+}
+
+.pmpksamy-header-links a {
+	display:         inline-flex;
+	align-items:     center;
+	gap:             4px;
+	font-size:       0.8125rem;
+	font-weight:     600;
+	color:           #1a73e8;
+	text-decoration: none;
+	padding:         6px 12px;
+	background:      #fff;
+	border:          1.5px solid #1a73e8;
+	border-radius:   20px;
+	transition:      all 0.2s ease;
+}
+
+.pmpksamy-header-links a:hover {
+	background:    #1a73e8;
+	color:         #fff;
+	border-color:  #1a73e8;
+}
+
+/* Settings footer */
+.pmpksamy-settings-footer {
+	margin-top:  20px;
+	padding:     12px 16px;
+	background:  #f8f9fa;
+	border-top:  1px solid #e0e0e0;
+	border-radius: 0 0 6px 6px;
+	font-size:   0.8125rem;
+	color:       #555;
+	text-align:  center;
+}
+
+.pmpksamy-settings-footer a {
+	color:           #1a73e8;
+	text-decoration: none;
+}
+
+.pmpksamy-settings-footer a:hover {
+	text-decoration: underline;
+}
+
+/* Meta box title class update */
+.pmpksamy-admin-upi-box {
+	margin:         16px 0;
+	padding:        16px;
+	background:     #f0f6ff;
+	border:         1px solid #c7d9f7;
+	border-radius:  6px;
+}
+
+.pmpksamy-admin-upi-title {
+	display:        flex;
+	align-items:    center;
+	gap:            10px;
+	font-size:      14px;
+	font-weight:    700;
+	color:          #1a73e8;
+	margin:         0 0 12px;
+	padding-bottom: 10px;
+	border-bottom:  1px solid #c7d9f7;
+}
+
+/* ============================================================
+   UPI info box inside order edit screen
+   ============================================================ */
+.pmpk-admin-upi-box {
+	margin:         16px 0;
+	padding:        16px;
+	background:     #f0f6ff;
+	border:         1px solid #c7d9f7;
+	border-radius:  6px;
+}
+
+.pmpk-admin-upi-title {
+	display:        flex;
+	align-items:    center;
+	gap:            10px;
+	font-size:      14px;
+	font-weight:    700;
+	color:          #1a73e8;
+	margin:         0 0 12px;
+	padding-bottom: 10px;
+	border-bottom:  1px solid #c7d9f7;
+}
+
+/* Metadata table */
+.pmpk-admin-meta-table {
+	width:           100%;
+	border-collapse: collapse;
+	font-size:       13px;
+}
+
+.pmpk-admin-meta-table th,
+.pmpk-admin-meta-table td {
+	padding:       5px 0;
+	vertical-align: top;
+}
+
+.pmpk-admin-meta-table th {
+	width:        140px;
+	color:        #555;
+	font-weight:  600;
+	padding-right: 12px;
+}
+
+.pmpk-admin-meta-table code {
+	background:    #e8f0fe;
+	padding:       2px 6px;
+	border-radius: 4px;
+	font-size:     12px;
+	font-family:   monospace;
+	color:         #1a73e8;
+}
+
+/* Action buttons */
+.pmpk-admin-actions {
+	display:    flex;
+	gap:        10px;
+	margin-top: 14px;
+	flex-wrap:  wrap;
+}
+
+.pmpk-approve-btn {
+	background:   #2e7d32 !important;
+	border-color: #2e7d32 !important;
+	color:        #fff    !important;
+}
+
+.pmpk-approve-btn:hover {
+	background:   #388e3c !important;
+	border-color: #388e3c !important;
+}
+
+.pmpk-reject-btn {
+	background:   #c62828 !important;
+	border-color: #c62828 !important;
+	color:        #fff    !important;
+}
+
+.pmpk-reject-btn:hover {
+	background:   #d32f2f !important;
+	border-color: #d32f2f !important;
+}
+
+/* Screenshot link */
+.pmpk-screenshot-link {
+	color: #1a73e8;
+	text-decoration: none;
+	font-size: 13px;
+}
+
+.pmpk-screenshot-link:hover {
+	text-decoration: underline;
+}
+
+/* ============================================================
+   Status badges — reused in both order detail and list column
+   ============================================================ */
+.pmpk-status-badge {
+	display:       inline-block;
+	padding:       3px 9px;
+	font-size:     11px;
+	font-weight:   600;
+	border-radius: 20px;
+	white-space:   nowrap;
+	text-transform: capitalize;
+	letter-spacing: 0.03em;
+}
+
+.pmpk-status-pending {
+	background: #fff3e0;
+	color:      #e65100;
+}
+
+.pmpk-status-confirmed {
+	background: #e3f2fd;
+	color:      #1565c0;
+}
+
+.pmpk-status-approved {
+	background: #e8f5e9;
+	color:      #2e7d32;
+}
+
+.pmpk-status-rejected {
+	background: #ffebee;
+	color:      #c62828;
+}
+
+.pmpk-status-unknown {
+	background: #f5f5f5;
+	color:      #666;
+}
+
+/* ============================================================
+   Admin feedback toast
+   ============================================================ */
+.pmpk-admin-toast {
+	position:      fixed;
+	bottom:        24px;
+	right:         24px;
+	z-index:       99999;
+	padding:       12px 20px;
+	border-radius: 6px;
+	font-size:     14px;
+	font-weight:   500;
+	box-shadow:    0 4px 16px rgba(0,0,0,0.15);
+	animation:     pmpkSlideUp 0.3s ease;
+	max-width:     340px;
+	color:         #fff;
+}
+
+.pmpk-admin-toast.success { background: #2e7d32; }
+.pmpk-admin-toast.error   { background: #c62828; }
+
+@keyframes pmpkSlideUp {
+	from { opacity: 0; transform: translateY(20px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Orders list table column
+   ============================================================ */
+.column-pmpk_upi_status {
+	width: 110px;
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40" role="img" aria-label="UPI">
+  <rect width="120" height="40" rx="6" fill="#ffffff" stroke="#e0e0e0" stroke-width="1"/>
+  <!-- UPI text -->
+  <text x="60" y="27" font-family="Arial,sans-serif" font-size="18" font-weight="bold"
+        fill="#1a73e8" text-anchor="middle" letter-spacing="2">UPI</text>
+  <!-- Small coloured dots -->
+  <circle cx="18" cy="20" r="6" fill="#4caf50"/>
+  <circle cx="100" cy="20" r="6" fill="#f44336"/>
+  <circle cx="18" cy="20" r="3" fill="#2196f3"/>
+  <circle cx="100" cy="20" r="3" fill="#ff9800"/>
+</svg>

@@ -1,0 +1,645 @@
+/**
+ * UPI SmartPay for WooCommerce — Frontend Styles
+ * Mobile-first, accessible, zero external dependencies.
+ * Developed by Maalig (iampmpksamy) · https://www.pmpksamy.com
+ *
+ * @package PMPKSAMY_UPI_SmartPay
+ */
+
+/* ============================================================
+   CSS Custom Properties (easy theming)
+   ============================================================ */
+:root {
+	--pmpk-primary:       #1a73e8;
+	--pmpk-primary-dark:  #1558b0;
+	--pmpk-success:       #1e8a3c;
+	--pmpk-danger:        #c62828;
+	--pmpk-warning:       #f57c00;
+	--pmpk-bg:            #ffffff;
+	--pmpk-surface:       #f8f9fa;
+	--pmpk-border:        #e0e0e0;
+	--pmpk-text:          #212121;
+	--pmpk-text-muted:    #6b7280;
+	--pmpk-radius:        12px;
+	--pmpk-radius-sm:     6px;
+	--pmpk-shadow:        0 2px 12px rgba(0, 0, 0, 0.08);
+	--pmpk-shadow-hover:  0 4px 20px rgba(26, 115, 232, 0.2);
+	--pmpk-transition:    0.2s ease;
+	--pmpk-font:          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ============================================================
+   Panel wrapper
+   ============================================================ */
+.pmpk-upi-payment-panel {
+	font-family:    var(--pmpk-font);
+	color:          var(--pmpk-text);
+	background:     var(--pmpk-bg);
+	border:         1px solid var(--pmpk-border);
+	border-radius:  var(--pmpk-radius);
+	box-shadow:     var(--pmpk-shadow);
+	padding:        24px;
+	margin:         24px 0;
+	max-width:      680px;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.pmpk-panel-header {
+	display:        flex;
+	align-items:    center;
+	gap:            14px;
+	margin-bottom:  20px;
+	padding-bottom: 16px;
+	border-bottom:  1px solid var(--pmpk-border);
+}
+
+.pmpk-panel-icon {
+	display:          flex;
+	align-items:      center;
+	justify-content:  center;
+	width:            52px;
+	height:           52px;
+	background:       linear-gradient(135deg, var(--pmpk-primary), var(--pmpk-primary-dark));
+	border-radius:    10px;
+	color:            #fff;
+	flex-shrink:      0;
+}
+
+.pmpk-panel-title h2 {
+	font-size:    1.25rem;
+	font-weight:  700;
+	margin:       0 0 4px;
+	color:        var(--pmpk-text);
+}
+
+.pmpk-panel-subtitle {
+	font-size:  0.875rem;
+	color:      var(--pmpk-text-muted);
+	margin:     0;
+}
+
+/* ============================================================
+   Status bar
+   ============================================================ */
+.pmpk-status-bar {
+	text-align:    center;
+	padding:       10px 16px;
+	border-radius: var(--pmpk-radius-sm);
+	margin-bottom: 16px;
+	font-size:     0.875rem;
+	font-weight:   500;
+}
+
+.pmpk-status-pending {
+	color:      var(--pmpk-warning);
+	background: #fff3e0;
+}
+
+.pmpk-status-confirmed {
+	color:      #1565c0;
+	background: #e3f2fd;
+}
+
+.pmpk-status-approved {
+	color:      var(--pmpk-success);
+	background: #e8f5e9;
+}
+
+.pmpk-status-rejected {
+	color:      var(--pmpk-danger);
+	background: #ffebee;
+}
+
+/* ============================================================
+   Amount highlight
+   ============================================================ */
+.pmpk-amount-block {
+	display:        flex;
+	flex-direction: column;
+	align-items:    center;
+	background:     linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+	border-radius:  var(--pmpk-radius-sm);
+	padding:        16px;
+	margin-bottom:  24px;
+	text-align:     center;
+}
+
+.pmpk-amount-label {
+	font-size:     0.75rem;
+	font-weight:   600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color:          var(--pmpk-primary-dark);
+}
+
+.pmpk-amount-value {
+	font-size:   2rem;
+	font-weight: 800;
+	color:       var(--pmpk-primary);
+	line-height: 1.2;
+	margin-top:  4px;
+}
+
+/* ============================================================
+   Content grid (QR + details side by side on desktop)
+   ============================================================ */
+.pmpk-content-grid {
+	display:               grid;
+	grid-template-columns: auto 1fr;
+	gap:                   28px;
+	align-items:           start;
+}
+
+@media (max-width: 540px) {
+	.pmpk-content-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* QR code */
+.pmpk-qr-wrapper {
+	display:        flex;
+	flex-direction: column;
+	align-items:    center;
+	gap:            10px;
+}
+
+.pmpk-qr-frame {
+	border:        3px solid var(--pmpk-border);
+	border-radius: var(--pmpk-radius-sm);
+	padding:       8px;
+	background:    #fff;
+	line-height:   0;
+	cursor:        zoom-in;
+	transition:    box-shadow var(--pmpk-transition), transform var(--pmpk-transition);
+}
+
+.pmpk-qr-frame:hover {
+	box-shadow: var(--pmpk-shadow-hover);
+	transform:  scale(1.02);
+}
+
+.pmpk-qr-image {
+	display:    block;
+	max-width:  100%;
+	width:      256px;
+	height:     256px;
+	object-fit: contain;
+}
+
+.pmpk-qr-caption {
+	font-size:  0.75rem;
+	color:      var(--pmpk-text-muted);
+	margin:     0;
+	text-align: center;
+}
+
+/* Mobile pay button (visible only on small screens) */
+.pmpk-mobile-pay-btn {
+	display:         inline-flex;
+	align-items:     center;
+	justify-content: center;
+	background:      var(--pmpk-primary);
+	color:           #fff;
+	border-radius:   var(--pmpk-radius-sm);
+	padding:         10px 20px;
+	font-size:       0.9rem;
+	font-weight:     600;
+	text-decoration: none;
+	width:           100%;
+	transition:      background var(--pmpk-transition), transform var(--pmpk-transition);
+}
+
+.pmpk-mobile-pay-btn:hover {
+	background: var(--pmpk-primary-dark);
+	transform:  translateY(-1px);
+	color:      #fff;
+	text-decoration: none;
+}
+
+.pmpk-mobile-only {
+	display: none;
+}
+
+@media (max-width: 540px) {
+	.pmpk-mobile-only {
+		display: inline-flex;
+	}
+}
+
+/* ============================================================
+   UPI ID block
+   ============================================================ */
+.pmpk-upi-id-block {
+	margin-bottom: 20px;
+}
+
+.pmpk-field-label {
+	display:       block;
+	font-size:     0.8125rem;
+	font-weight:   600;
+	color:         var(--pmpk-text-muted);
+	margin-bottom: 6px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.pmpk-upi-id-row {
+	display: flex;
+	gap:     8px;
+}
+
+.pmpk-upi-id-input {
+	flex:          1;
+	padding:       10px 14px;
+	border:        1.5px solid var(--pmpk-border);
+	border-radius: var(--pmpk-radius-sm);
+	font-size:     1rem;
+	font-weight:   600;
+	font-family:   var(--pmpk-font);
+	color:         var(--pmpk-text);
+	background:    var(--pmpk-surface);
+	cursor:        text;
+	min-width:     0;
+}
+
+.pmpk-upi-id-input:focus {
+	outline:       none;
+	border-color:  var(--pmpk-primary);
+	box-shadow:    0 0 0 3px rgba(26, 115, 232, 0.15);
+}
+
+.pmpk-copy-btn {
+	display:         inline-flex;
+	align-items:     center;
+	gap:             6px;
+	padding:         10px 16px;
+	background:      var(--pmpk-surface);
+	border:          1.5px solid var(--pmpk-border);
+	border-radius:   var(--pmpk-radius-sm);
+	font-size:       0.875rem;
+	font-weight:     600;
+	color:           var(--pmpk-primary);
+	cursor:          pointer;
+	transition:      all var(--pmpk-transition);
+	white-space:     nowrap;
+	flex-shrink:     0;
+}
+
+.pmpk-copy-btn:hover,
+.pmpk-copy-btn:focus {
+	background:    var(--pmpk-primary);
+	border-color:  var(--pmpk-primary);
+	color:         #fff;
+	outline:       none;
+	box-shadow:    0 0 0 3px rgba(26, 115, 232, 0.2);
+}
+
+.pmpk-copy-btn.pmpk-copied {
+	background:   var(--pmpk-success);
+	border-color: var(--pmpk-success);
+	color:        #fff;
+}
+
+/* ============================================================
+   Instructions
+   ============================================================ */
+.pmpk-instructions-block {
+	background:    var(--pmpk-surface);
+	border-left:   3px solid var(--pmpk-primary);
+	border-radius: 0 var(--pmpk-radius-sm) var(--pmpk-radius-sm) 0;
+	padding:       14px 16px;
+}
+
+.pmpk-instructions-heading {
+	font-size:     0.875rem;
+	font-weight:   700;
+	color:         var(--pmpk-primary);
+	margin:        0 0 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+.pmpk-steps-list {
+	margin:      0;
+	padding-left: 20px;
+}
+
+.pmpk-steps-list li {
+	font-size:   0.875rem;
+	color:       var(--pmpk-text);
+	line-height: 1.6;
+	padding:     2px 0;
+}
+
+/* ============================================================
+   Confirmation section
+   ============================================================ */
+.pmpk-confirm-section {
+	border-top:  1px solid var(--pmpk-border);
+	margin-top:  28px;
+	padding-top: 24px;
+}
+
+.pmpk-confirm-heading {
+	font-size:     1rem;
+	font-weight:   700;
+	color:         var(--pmpk-text);
+	margin:        0 0 16px;
+}
+
+.pmpk-utr-row {
+	margin-bottom: 16px;
+}
+
+.pmpk-utr-input {
+	display:       block;
+	width:         100%;
+	padding:       12px 14px;
+	border:        1.5px solid var(--pmpk-border);
+	border-radius: var(--pmpk-radius-sm);
+	font-size:     1rem;
+	font-family:   var(--pmpk-font);
+	color:         var(--pmpk-text);
+	transition:    border-color var(--pmpk-transition), box-shadow var(--pmpk-transition);
+	box-sizing:    border-box;
+}
+
+.pmpk-utr-input:focus {
+	outline:      none;
+	border-color: var(--pmpk-primary);
+	box-shadow:   0 0 0 3px rgba(26, 115, 232, 0.15);
+}
+
+.pmpk-field-hint {
+	display:    block;
+	font-size:  0.75rem;
+	color:      var(--pmpk-text-muted);
+	margin-top: 4px;
+}
+
+.pmpk-required {
+	color:      var(--pmpk-danger);
+	margin-left: 2px;
+}
+
+.pmpk-optional {
+	font-size:  0.75rem;
+	color:      var(--pmpk-text-muted);
+	font-weight: normal;
+	margin-left: 4px;
+}
+
+/* Screenshot upload */
+.pmpk-screenshot-row {
+	margin-bottom: 20px;
+}
+
+.pmpk-file-drop-zone {
+	display:          flex;
+	flex-direction:   column;
+	align-items:      center;
+	justify-content:  center;
+	padding:          24px 16px;
+	border:           2px dashed var(--pmpk-border);
+	border-radius:    var(--pmpk-radius-sm);
+	background:       var(--pmpk-surface);
+	cursor:           pointer;
+	transition:       all var(--pmpk-transition);
+	text-align:       center;
+	position:         relative;
+	gap:              6px;
+}
+
+.pmpk-file-drop-zone:hover,
+.pmpk-file-drop-zone.pmpk-dragover,
+.pmpk-file-drop-zone:focus {
+	border-color: var(--pmpk-primary);
+	background:   #e8f0fe;
+	outline:      none;
+}
+
+.pmpk-file-input {
+	position: absolute;
+	inset:    0;
+	opacity:  0;
+	cursor:   pointer;
+	width:    100%;
+	height:   100%;
+}
+
+.pmpk-drop-icon { font-size: 1.5rem; }
+
+.pmpk-drop-text {
+	font-size:   0.875rem;
+	font-weight: 600;
+	color:       var(--pmpk-primary);
+}
+
+.pmpk-drop-meta {
+	font-size: 0.75rem;
+	color:     var(--pmpk-text-muted);
+}
+
+.pmpk-file-preview {
+	margin-top:  10px;
+	text-align:  center;
+}
+
+.pmpk-file-preview img {
+	max-width:    100%;
+	max-height:   160px;
+	border-radius: var(--pmpk-radius-sm);
+	border:       1px solid var(--pmpk-border);
+}
+
+.pmpk-upload-progress {
+	height:        6px;
+	background:    var(--pmpk-border);
+	border-radius: 3px;
+	margin-top:    8px;
+	overflow:      hidden;
+}
+
+.pmpk-progress-bar {
+	height:      100%;
+	background:  var(--pmpk-primary);
+	width:       0;
+	transition:  width 0.3s ease;
+	border-radius: 3px;
+}
+
+.pmpk-upload-message {
+	font-size:  0.8125rem;
+	margin-top: 6px;
+}
+
+.pmpk-upload-message.success { color: var(--pmpk-success); }
+.pmpk-upload-message.error   { color: var(--pmpk-danger);  }
+
+/* Confirm button */
+.pmpk-confirm-btn {
+	display:         inline-flex;
+	align-items:     center;
+	gap:             8px;
+	background:      linear-gradient(135deg, #2e7d32, #1b5e20);
+	color:           #fff;
+	border:          none;
+	border-radius:   var(--pmpk-radius-sm);
+	padding:         14px 28px;
+	font-size:       1rem;
+	font-weight:     700;
+	cursor:          pointer;
+	width:           100%;
+	justify-content: center;
+	transition:      all var(--pmpk-transition);
+	box-shadow:      0 2px 8px rgba(46, 125, 50, 0.35);
+	letter-spacing:  0.02em;
+}
+
+.pmpk-confirm-btn:hover,
+.pmpk-confirm-btn:focus {
+	background:  linear-gradient(135deg, #388e3c, #2e7d32);
+	transform:   translateY(-1px);
+	box-shadow:  0 4px 16px rgba(46, 125, 50, 0.45);
+	outline:     none;
+}
+
+.pmpk-confirm-btn:active {
+	transform: translateY(0);
+}
+
+.pmpk-confirm-btn:disabled {
+	opacity:   0.65;
+	cursor:    not-allowed;
+	transform: none;
+}
+
+.pmpk-confirm-message {
+	margin-top: 12px;
+	font-size:  0.875rem;
+	text-align: center;
+}
+
+.pmpk-confirm-message.success { color: var(--pmpk-success); font-weight: 600; }
+.pmpk-confirm-message.error   { color: var(--pmpk-danger);  }
+
+/* ============================================================
+   Post-confirmation notice
+   ============================================================ */
+.pmpk-confirmed-notice {
+	display:       flex;
+	gap:           14px;
+	align-items:   flex-start;
+	background:    #e8f5e9;
+	border:        1px solid #a5d6a7;
+	border-radius: var(--pmpk-radius-sm);
+	padding:       16px;
+	margin-top:    24px;
+}
+
+.pmpk-confirmed-icon {
+	font-size:   1.5rem;
+	line-height: 1;
+	flex-shrink: 0;
+	color:       var(--pmpk-success);
+}
+
+.pmpk-confirmed-notice strong {
+	display:       block;
+	font-size:     1rem;
+	color:         var(--pmpk-success);
+	margin-bottom: 4px;
+}
+
+.pmpk-confirmed-notice p {
+	font-size: 0.875rem;
+	color:     #2e7d32;
+	margin:    0;
+}
+
+/* ============================================================
+   Checkout page: app badges
+   ============================================================ */
+.pmpk-checkout-description {
+	margin-bottom: 12px;
+}
+
+.pmpk-checkout-apps {
+	display:     flex;
+	flex-wrap:   wrap;
+	align-items: center;
+	gap:         6px;
+	margin-top:  8px;
+}
+
+.pmpk-apps-label {
+	font-size:  0.8125rem;
+	color:      var(--pmpk-text-muted);
+	font-weight: 500;
+}
+
+.pmpk-app-badge {
+	display:       inline-block;
+	padding:       3px 10px;
+	font-size:     0.75rem;
+	font-weight:   600;
+	border:        1.5px solid var(--pmpk-primary);
+	border-radius: 20px;
+	color:         var(--pmpk-primary);
+}
+
+/* ============================================================
+   QR modal / lightbox (JS-driven)
+   ============================================================ */
+.pmpk-qr-modal-overlay {
+	position:   fixed;
+	inset:      0;
+	background: rgba(0, 0, 0, 0.75);
+	display:    flex;
+	align-items: center;
+	justify-content: center;
+	z-index:    99999;
+	cursor:     zoom-out;
+	animation:  pmpkFadeIn 0.2s ease;
+}
+
+.pmpk-qr-modal-inner {
+	background:    #fff;
+	border-radius: var(--pmpk-radius);
+	padding:       20px;
+	max-width:     90vw;
+}
+
+.pmpk-qr-modal-inner img {
+	display:   block;
+	max-width: min(480px, 90vw);
+}
+
+@keyframes pmpkFadeIn {
+	from { opacity: 0; transform: scale(0.95); }
+	to   { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   Panel branding footer
+   ============================================================ */
+.pmpk-panel-branding {
+	border-top:  1px solid var(--pmpk-border);
+	margin-top:  20px;
+	padding-top: 12px;
+	text-align:  center;
+	font-size:   0.75rem;
+	color:       var(--pmpk-text-muted);
+}
+
+.pmpk-panel-branding a {
+	color:           var(--pmpk-primary);
+	text-decoration: none;
+}
+
+.pmpk-panel-branding a:hover {
+	text-decoration: underline;
+}

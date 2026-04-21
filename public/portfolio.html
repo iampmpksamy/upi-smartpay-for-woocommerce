@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iampmpksamy — WordPress Developer &amp; Plugin Architect</title>
+  <meta name="description" content="Portfolio of Maalig (iampmpksamy) — WordPress plugin architect, WooCommerce specialist, AI integrator, and SaaS builder." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #1a73e8;
+      --blue-dk: #1558b0;
+      --green:   #1e8a3c;
+      --purple:  #7c3aed;
+      --orange:  #ea7c00;
+      --text:    #111827;
+      --muted:   #6b7280;
+      --border:  #e5e7eb;
+      --surface: #f9fafb;
+      --radius:  12px;
+      --font:    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body { font-family: var(--font); color: var(--text); background: #fff; line-height: 1.6; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Top bar ──────────────────────────────────────────── */
+    .topbar {
+      background:    var(--blue);
+      color:         #fff;
+      text-align:    center;
+      padding:       8px 20px;
+      font-size:     0.8125rem;
+      font-weight:   500;
+    }
+
+    .topbar a { color: #fff; font-weight: 700; }
+
+    /* ── Nav ──────────────────────────────────────────────── */
+    nav {
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      padding:         16px 48px;
+      border-bottom:   1px solid var(--border);
+      position:        sticky;
+      top:             0;
+      background:      rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      z-index:         100;
+    }
+
+    .nav-name {
+      font-size:   1rem;
+      font-weight: 800;
+      color:       var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-name span { color: var(--blue); }
+    .nav-links { display: flex; gap: 24px; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--blue); text-decoration: none; }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      display:        grid;
+      grid-template-columns: 1fr auto;
+      align-items:    center;
+      gap:            40px;
+      max-width:      1040px;
+      margin:         0 auto;
+      padding:        72px 48px 60px;
+    }
+
+    .hero-tag {
+      display:       inline-block;
+      background:    #ede9fe;
+      color:         var(--purple);
+      font-size:     0.75rem;
+      font-weight:   700;
+      padding:       4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size:   clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 .highlight { color: var(--blue); }
+
+    .hero-bio {
+      font-size:     1.05rem;
+      color:         var(--muted);
+      margin-bottom: 32px;
+      max-width:     520px;
+    }
+
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn {
+      display:         inline-flex;
+      align-items:     center;
+      gap:             7px;
+      padding:         12px 24px;
+      font-size:       0.9rem;
+      font-weight:     700;
+      border-radius:   var(--radius);
+      cursor:          pointer;
+      transition:      all 0.2s ease;
+      text-decoration: none;
+      white-space:     nowrap;
+    }
+
+    .btn-blue    { background: var(--blue); color: #fff; box-shadow: 0 4px 14px rgba(26,115,232,0.3); }
+    .btn-blue:hover { background: var(--blue-dk); transform: translateY(-1px); color: #fff; text-decoration: none; }
+    .btn-ghost   { border: 2px solid var(--border); color: var(--text); background: #fff; }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); text-decoration: none; }
+
+    .hero-avatar {
+      width:         160px;
+      height:        160px;
+      border-radius: 50%;
+      background:    linear-gradient(135deg, var(--blue), var(--purple));
+      display:       flex;
+      align-items:   center;
+      justify-content: center;
+      font-size:     4rem;
+      flex-shrink:   0;
+    }
+
+    /* ── Skills ───────────────────────────────────────────── */
+    .skills {
+      background: var(--surface);
+      padding:    56px 48px;
+    }
+
+    .section-title {
+      font-size:     1.5rem;
+      font-weight:   800;
+      text-align:    center;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      color:         var(--muted);
+      text-align:    center;
+      font-size:     0.9rem;
+      margin-bottom: 40px;
+    }
+
+    .skills-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap:                   16px;
+      max-width:             900px;
+      margin:                0 auto;
+    }
+
+    .skill-pill {
+      display:         flex;
+      align-items:     center;
+      gap:             12px;
+      padding:         16px 20px;
+      background:      #fff;
+      border:          1px solid var(--border);
+      border-radius:   var(--radius);
+      font-weight:     600;
+      font-size:       0.9rem;
+      transition:      all 0.2s ease;
+    }
+
+    .skill-pill:hover {
+      border-color: var(--blue);
+      box-shadow:   0 4px 12px rgba(26,115,232,0.1);
+      transform:    translateY(-1px);
+    }
+
+    .skill-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    /* ── Projects ─────────────────────────────────────────── */
+    .projects {
+      padding:   60px 48px;
+      max-width: 1040px;
+      margin:    0 auto;
+    }
+
+    .projects-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:                   24px;
+    }
+
+    .project-card {
+      border:        1px solid var(--border);
+      border-radius: var(--radius);
+      overflow:      hidden;
+      transition:    box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .project-card:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+      transform:  translateY(-3px);
+    }
+
+    .project-card.featured {
+      border-color: var(--blue);
+      box-shadow:   0 0 0 3px rgba(26,115,232,0.1);
+    }
+
+    .project-thumb {
+      height:          180px;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      font-size:       3rem;
+    }
+
+    .thumb-blue   { background: linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%); }
+    .thumb-green  { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+    .thumb-purple { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); }
+    .thumb-orange { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+
+    .project-body { padding: 20px; }
+
+    .project-tag {
+      display:       inline-block;
+      font-size:     0.7rem;
+      font-weight:   700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding:       2px 8px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .tag-blue   { background: #e8f0fe; color: var(--blue); }
+    .tag-green  { background: #e8f5e9; color: var(--green); }
+    .tag-purple { background: #ede9fe; color: var(--purple); }
+    .tag-orange { background: #fff3e0; color: var(--orange); }
+
+    .project-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .project-body p  { font-size: 0.875rem; color: var(--muted); margin-bottom: 16px; }
+
+    .project-links { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .project-link {
+      font-size:       0.8125rem;
+      font-weight:     600;
+      padding:         6px 14px;
+      border-radius:   6px;
+      border:          1.5px solid var(--border);
+      color:           var(--text);
+      transition:      all 0.15s ease;
+    }
+
+    .project-link:hover {
+      border-color:    var(--blue);
+      color:           var(--blue);
+      text-decoration: none;
+    }
+
+    .featured-badge {
+      display:       inline-flex;
+      align-items:   center;
+      gap:           4px;
+      font-size:     0.7rem;
+      font-weight:   700;
+      background:    var(--blue);
+      color:         #fff;
+      padding:       2px 8px;
+      border-radius: 20px;
+      margin-left:   8px;
+    }
+
+    /* ── Contact ──────────────────────────────────────────── */
+    .contact {
+      background:  var(--surface);
+      padding:     64px 48px;
+      text-align:  center;
+    }
+
+    .contact-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:                   16px;
+      max-width:             700px;
+      margin:                32px auto 0;
+    }
+
+    .contact-card {
+      background:    #fff;
+      border:        1px solid var(--border);
+      border-radius: var(--radius);
+      padding:       20px 16px;
+      text-align:    center;
+      transition:    all 0.2s ease;
+      text-decoration: none;
+      color:         var(--text);
+      display:       block;
+    }
+
+    .contact-card:hover {
+      border-color:    var(--blue);
+      box-shadow:      0 4px 14px rgba(26,115,232,0.12);
+      transform:       translateY(-2px);
+      text-decoration: none;
+      color:           var(--text);
+    }
+
+    .contact-card .icon { font-size: 1.75rem; margin-bottom: 8px; display: block; }
+    .contact-card h4    { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+    .contact-card p     { font-size: 0.8125rem; color: var(--muted); }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      border-top:  1px solid var(--border);
+      padding:     24px 48px;
+      display:     flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap:   wrap;
+      gap:         12px;
+      font-size:   0.8125rem;
+      color:       var(--muted);
+    }
+
+    @media (max-width: 680px) {
+      nav, .hero, .skills, .projects, .contact, footer { padding: 20px; }
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-ctas { justify-content: center; }
+      .hero-avatar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    🔥 New Plugin: <a href="branding-page.html">UPI SmartPay for WooCommerce</a> — Free on WordPress.org
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-name">iampmpk<span>samy</span></div>
+    <div class="nav-links">
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+      <a href="https://www.pmpksamy.com" target="_blank" rel="noopener">Website ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">WordPress Plugin Architect</div>
+      <h1>
+        Hi, I'm <span class="highlight">Maalig</span><br/>
+        iampmpksamy
+      </h1>
+      <p class="hero-bio">
+        I build production-ready WordPress plugins, WooCommerce extensions, and AI-powered
+        SaaS tools. Focused on clean code, real-world utility, and zero unnecessary dependencies.
+      </p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn btn-blue">View Projects</a>
+        <a href="https://www.pmpksamy.com" target="_blank" rel="noopener" class="btn btn-ghost">
+          🌐 pmpksamy.com
+        </a>
+        <a href="https://www.iampmpksamy.social" target="_blank" rel="noopener" class="btn btn-ghost">
+          📱 Social Hub
+        </a>
+      </div>
+    </div>
+    <div class="hero-avatar">👨‍💻</div>
+  </section>
+
+  <!-- Skills -->
+  <section class="skills" id="skills">
+    <h2 class="section-title">Skills & Technologies</h2>
+    <p class="section-sub">Full-stack WordPress development with modern tooling.</p>
+    <div class="skills-grid">
+      <div class="skill-pill"><span class="skill-icon">🐘</span> PHP 7.4 / 8.x</div>
+      <div class="skill-pill"><span class="skill-icon">🛒</span> WooCommerce</div>
+      <div class="skill-pill"><span class="skill-icon">🔷</span> WordPress Core APIs</div>
+      <div class="skill-pill"><span class="skill-icon">🎨</span> HTML / CSS / JS</div>
+      <div class="skill-pill"><span class="skill-icon">⚛️</span> React / Gutenberg</div>
+      <div class="skill-pill"><span class="skill-icon">🤖</span> AI / LLM Integration</div>
+      <div class="skill-pill"><span class="skill-icon">☁️</span> SaaS Architecture</div>
+      <div class="skill-pill"><span class="skill-icon">🔒</span> Security Best Practices</div>
+      <div class="skill-pill"><span class="skill-icon">⚙️</span> CI/CD · GitHub Actions</div>
+      <div class="skill-pill"><span class="skill-icon">🌐</span> REST API Design</div>
+      <div class="skill-pill"><span class="skill-icon">🗄️</span> MySQL / WP Database</div>
+      <div class="skill-pill"><span class="skill-icon">📦</span> Plugin Architecture</div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="projects" id="projects">
+    <h2 class="section-title">Projects</h2>
+    <p class="section-sub">Open source and commercial plugins built for the WordPress ecosystem.</p>
+
+    <div class="projects-grid">
+
+      <!-- UPI SmartPay — FEATURED -->
+      <div class="project-card featured">
+        <div class="project-thumb thumb-blue">📱</div>
+        <div class="project-body">
+          <div>
+            <span class="project-tag tag-blue">WooCommerce</span>
+            <span class="featured-badge">⭐ Featured</span>
+          </div>
+          <h3>UPI SmartPay for WooCommerce</h3>
+          <p>
+            Full-featured UPI payment gateway. QR code generation, multiple UPI IDs,
+            screenshot upload, admin approve/reject, HPOS compatible, translation ready.
+          </p>
+          <div class="project-links">
+            <a href="branding-page.html" class="project-link">🔍 Details</a>
+            <a href="https://wordpress.org/plugins/upi-smartpay" target="_blank" rel="noopener" class="project-link">⬇ Download</a>
+            <a href="https://www.pmpksamy.com/plugins/upi-smartpay" target="_blank" rel="noopener" class="project-link">📖 Docs</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maalig Online Drive Backuply -->
+      <div class="project-card">
+        <div class="project-thumb thumb-green">🔒</div>
+        <div class="project-body">
+          <span class="project-tag tag-green">WordPress Plugin</span>
+          <h3>Maalig Online Drive Backuply</h3>
+          <p>
+            Automated WordPress backup solution with cloud drive integration.
+            Scheduled backups, restore points, and notification system.
+          </p>
+          <div class="project-links">
+            <a href="https://www.pmpksamy.com" target="_blank" rel="noopener" class="project-link">🌐 Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI SaaS Projects -->
+      <div class="project-card">
+        <div class="project-thumb thumb-purple">🤖</div>
+        <div class="project-body">
+          <span class="project-tag tag-purple">AI / SaaS</span>
+          <h3>AI-Powered Tools</h3>
+          <p>
+            Custom AI integrations for WordPress — content generation, smart automation,
+            and LLM-powered features built directly into WP admin workflows.
+          </p>
+          <div class="project-links">
+            <a href="https://www.pmpksamy.com" target="_blank" rel="noopener" class="project-link">🌐 Explore</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- More coming -->
+      <div class="project-card">
+        <div class="project-thumb thumb-orange">🚀</div>
+        <div class="project-body">
+          <span class="project-tag tag-orange">Coming Soon</span>
+          <h3>More Projects in 2025</h3>
+          <p>
+            New WooCommerce extensions and WordPress tools in active development.
+            Follow on GitHub or subscribe to the newsletter for updates.
+          </p>
+          <div class="project-links">
+            <a href="https://github.com/iampmpksamy" target="_blank" rel="noopener" class="project-link">💻 GitHub</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <h2 class="section-title">Get in Touch</h2>
+    <p class="section-sub">
+      Open to collaborations, plugin commissions, and consulting.
+    </p>
+    <div class="contact-grid">
+      <a href="https://www.pmpksamy.com" target="_blank" rel="noopener" class="contact-card">
+        <span class="icon">🌐</span>
+        <h4>Website</h4>
+        <p>pmpksamy.com</p>
+      </a>
+      <a href="https://www.iampmpksamy.social" target="_blank" rel="noopener" class="contact-card">
+        <span class="icon">📱</span>
+        <h4>Social Hub</h4>
+        <p>iampmpksamy.social</p>
+      </a>
+      <a href="https://github.com/iampmpksamy" target="_blank" rel="noopener" class="contact-card">
+        <span class="icon">💻</span>
+        <h4>GitHub</h4>
+        <p>@iampmpksamy</p>
+      </a>
+      <a href="https://wordpress.org/support/users/iampmpksamy" target="_blank" rel="noopener" class="contact-card">
+        <span class="icon">🔷</span>
+        <h4>WordPress.org</h4>
+        <p>Support & Reviews</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>
+      © 2025 <strong>Maalig (iampmpksamy)</strong> ·
+      <a href="https://www.pmpksamy.com" target="_blank" rel="noopener">pmpksamy.com</a>
+    </span>
+    <span>
+      <a href="https://www.iampmpksamy.social" target="_blank" rel="noopener">🌐 Social Hub</a>
+      &nbsp;·&nbsp;
+      <a href="https://wordpress.org/plugins/search/iampmpksamy" target="_blank" rel="noopener">WordPress.org Plugins</a>
+    </span>
+  </footer>
+
+</body>
+</html>
