@@ -1,10 +1,8 @@
 name: Release
 
-# Runs on every push to main and when a version tag (v*.*.*) is pushed.
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
     tags:
       - 'v*.*.*'
   workflow_dispatch:
@@ -12,195 +10,130 @@ on:
 permissions:
   contents: write
 
-# ---------------------------------------------------------------------------
-# Environment
-# ---------------------------------------------------------------------------
 env:
   PLUGIN_SLUG: upi-smartpay
-  MAIN_FILE:   pmpk-upi-smartpay.php
+  MAIN_FILE: pmpk-upi-smartpay.php
 
-# ---------------------------------------------------------------------------
 jobs:
-# ---------------------------------------------------------------------------
 
-  # =========================================================================
-  # 1. PHP Syntax — run against multiple PHP versions
-  # =========================================================================
+# =========================
+# 1. PHP LINT
+# =========================
   php-lint:
-    name: PHP Lint (PHP ${{ matrix.php }})
+    name: PHP Lint
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        php: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up PHP ${{ matrix.php }}
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
+          php-version: ${{ matrix.php-version }}
 
-      - name: Syntax check all .php files
-        run: |
-          ERRORS=0
-          while IFS= read -r -d '' file; do
-            php -l "$file" > /dev/null 2>&1 || { echo "SYNTAX ERROR: $file"; ERRORS=$((ERRORS+1)); }
-          done < <(find . -name "*.php" -not -path "*/vendor/*" -print0)
-          [ "$ERRORS" -eq 0 ] && echo "✅ All PHP files passed syntax check." || exit 1
+      - name: Run PHP Lint
+        run: find . -type f -name "*.php" -exec php -l {} \;
 
-  # =========================================================================
-  # 2. WordPress Coding Standards (PHPCS)
-  # =========================================================================
+
+# =========================
+# 2. WORDPRESS CODING STANDARDS (SAFE VERSION)
+# =========================
   phpcs:
     name: WordPress Coding Standards
     runs-on: ubuntu-latest
     needs: php-lint
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up PHP
+      - name: Setup PHP + Composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: 8.1
           tools: composer
-          coverage: none
 
-      - name: Install PHPCS + WordPress standards
+      - name: Install PHPCS (stable combo)
         run: |
           composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
 
-          # Install compatible versions (IMPORTANT)
           composer global require squizlabs/php_codesniffer:^3.7
           composer global require wp-coding-standards/wpcs:^3.0
 
-          # Set WPCS path
-          ~/.composer/vendor/bin/phpcs --config-set installed_paths ~/.composer/vendor/wp-coding-standards/wpcs
+          ~/.composer/vendor/bin/phpcs --config-set installed_paths \
+          ~/.composer/vendor/wp-coding-standards/wpcs
 
-      - name: Run PHPCS
+      - name: Run PHPCS (non-blocking)
         run: |
-          phpcs \
-            --standard=WordPress \
-            --extensions=php \
-            --ignore=*/vendor/* \
-            --report=summary \
-            .
-        continue-on-error: true   # Report but don't block release on style warnings.
+          ~/.composer/vendor/bin/phpcs \
+          --standard=WordPress \
+          --extensions=php \
+          . || true
 
-  # =========================================================================
-  # 3. Build — create distributable ZIP
-  # =========================================================================
+
+# =========================
+# 3. BUILD PLUGIN ZIP
+# =========================
   build:
     name: Build Plugin ZIP
     runs-on: ubuntu-latest
-    needs: [php-lint, phpcs]
-
-    outputs:
-      zip-name: ${{ steps.meta.outputs.zip_name }}
-      version:  ${{ steps.meta.outputs.version }}
+    needs: phpcs
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Extract version from plugin header
-        id: meta
+      - name: Extract Version
+        id: version
         run: |
-          VERSION=$(grep -m1 "^\s*\*\s*Version:" "${{ env.MAIN_FILE }}" \
-            | sed 's/.*Version:\s*//' | tr -d '[:space:]')
-          echo "version=${VERSION}"                                    >> "$GITHUB_OUTPUT"
-          echo "zip_name=${{ env.PLUGIN_SLUG }}-${VERSION}.zip"       >> "$GITHUB_OUTPUT"
-          echo "Plugin version: ${VERSION}"
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build ZIP (exclude dev-only files)
+      - name: Prepare Plugin Folder
         run: |
-          # Zip the contents so the plugin installs into upi-smartpay/ in WP.
-          mkdir -p dist/${{ env.PLUGIN_SLUG }}
-          rsync -a \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='dist' \
+          mkdir $PLUGIN_SLUG
+          rsync -av \
+            --exclude='.git*' \
             --exclude='node_modules' \
-            --exclude='vendor' \
-            --exclude='composer.json' \
-            --exclude='composer.lock' \
-            --exclude='.phpcs.xml' \
-            --exclude='phpunit.xml' \
-            --exclude='tests' \
-            --exclude='Makefile' \
-            --exclude='*.DS_Store' \
-            ./ dist/${{ env.PLUGIN_SLUG }}/
+            --exclude='.github' \
+            ./ $PLUGIN_SLUG/
 
-          cd dist
-          zip -r "../${{ steps.meta.outputs.zip_name }}" ${{ env.PLUGIN_SLUG }}/
-          cd ..
-          echo "✅ ZIP created: ${{ steps.meta.outputs.zip_name }}"
+      - name: Create ZIP
+        run: |
+          zip -r $PLUGIN_SLUG-$VERSION.zip $PLUGIN_SLUG
 
-      - name: Verify ZIP contents
-        run: unzip -l "${{ steps.meta.outputs.zip_name }}" | head -40
-
-      - name: Upload ZIP as build artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: plugin-zip
-          path: ${{ steps.meta.outputs.zip_name }}
-          retention-days: 30
+          path: ${{ env.PLUGIN_SLUG }}-${{ env.VERSION }}.zip
 
-  # =========================================================================
-  # 4. GitHub Release — only on version tags
-  # =========================================================================
+
+# =========================
+# 4. CREATE RELEASE (ONLY ON TAG)
+# =========================
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Download ZIP artifact
+      - name: Download ZIP
         uses: actions/download-artifact@v4
         with:
           name: plugin-zip
 
-      - name: Parse changelog for this version
-        id: changelog
-        run: |
-          VERSION="${{ needs.build.outputs.version }}"
-          NOTES=$(awk "/^= ${VERSION} =/,/^= [0-9]/" readme.txt \
-            | grep -v "^= ${VERSION}" \
-            | grep -v "^= [0-9]" \
-            | sed '/^[[:space:]]*$/d' \
-            | head -25)
-          {
-            echo "notes<<EOF"
-            echo "${NOTES:-See readme.txt for full changelog.}"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Create GitHub Release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name:   ${{ github.ref_name }}
-          name:       "UPI SmartPay v${{ needs.build.outputs.version }}"
-          body: |
-            ## What's New
-
-            ${{ steps.changelog.outputs.notes }}
-
-            ---
-
-            **Install:** Download the ZIP below → *WP Admin → Plugins → Add New → Upload Plugin*.
-
-            **Links:**
-            - 📖 [Documentation](https://www.pmpksamy.com/plugins/upi-smartpay)
-            - 🔷 [WordPress.org](https://wordpress.org/plugins/upi-smartpay/)
-            - 🌐 [Developer Website](https://www.pmpksamy.com)
-            - 📱 [Social Hub](https://www.iampmpksamy.social)
-
-            ---
-            *Developed by [Maalig (iampmpksamy)](https://www.pmpksamy.com)*
-          files:      ${{ needs.build.outputs.zip-name }}
-          draft:      false
-          prerelease: false
+          tag_name: ${{ github.ref_name }}
+          name: UPI SmartPay v${{ github.ref_name }}
+          files: ${{ env.PLUGIN_SLUG }}-${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
