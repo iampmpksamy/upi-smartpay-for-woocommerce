@@ -143,6 +143,7 @@ class PMPKSAMY_UPI_Gateway extends WC_Payment_Gateway {
 
 	/** Pull option values into object properties for convenient access. */
 	private function map_settings() {
+		$this->enabled              = $this->get_option( 'enabled', 'yes' );
 		$this->title                = $this->get_option( 'title' );
 		$this->description          = $this->get_option( 'description' );
 		$this->merchant_name        = $this->get_option( 'merchant_name', get_bloginfo( 'name' ) );
