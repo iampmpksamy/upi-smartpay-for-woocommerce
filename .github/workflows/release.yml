@@ -70,12 +70,9 @@ jobs:
 
       - name: Install PHPCS + WordPress standards
         run: |
-          composer global require \
-            "squizlabs/php_codesniffer:*" \
-            "wp-coding-standards/wpcs:*" \
-            --no-interaction --quiet
-          phpcs --config-set installed_paths \
-            "$HOME/.composer/vendor/wp-coding-standards/wpcs"
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require squizlabs/php_codesniffer
+          composer global require wp-coding-standards/wpcs
 
       - name: Run PHPCS
         run: |
